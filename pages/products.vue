@@ -18,7 +18,7 @@
         </p>
         <p class="price">ราคา 2,500 บาท</p>
 
-        <button class="buy-btn" @click="order('เสื้อยืด Dino Shop')">
+        <button class="buy-btn" @click="order('เสื้อยืด Dino Shop', 2500)">
           get order!
         </button>
       </div>
@@ -38,9 +38,9 @@
         <p class="description">
           รถมือสองสภาพดี เลขไมล์1 เสียตั้งแต่ออกศูนย์ ของแต่งเพียบ
         </p>
-        <p class="price">ราคา 99,xxx บาท</p>
+        <p class="price">ราคา 99000 บาท</p>
 
-        <button class="buy-btn" @click="order('แก้วน้ำ Dino')">
+        <button class="buy-btn" @click="order('Wave ทรงเชง', 99000)">
           get order!
         </button>
       </div>
@@ -60,9 +60,9 @@
         <p class="description">
           เรือดำน้ำมือสอง ผ่านการระเบิดมาแล้ว 1ครั้ง ตอนนี้นำกลับมาซ่อมใหม่ ยังไม่ได้ทดลองขับ
         </p>
-        <p class="price">ราคา 189,xxx บาท</p>
+        <p class="price">ราคา 189000 บาท</p>
 
-        <button class="buy-btn" @click="order('หมวก Dino')">
+        <button class="buy-btn" @click="order('เรือดำน้ำ', 189000)">
           get order!
         </button>
       </div>
@@ -71,8 +71,27 @@
 </template>
 
 <script setup>
-const order = (productName) => {
-  alert(`สั่งซื้อสินค้า "${productName}" เรียบร้อย (เดโม่)`)
+const order = async (productName, price) => {
+  try {
+    const response = await fetch('http://localhost/dino-api/insert_order.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        product_name: productName,
+        price: price,
+        user_id: 1
+      })
+    })
+
+    const result = await response.text()
+    alert(result)
+
+  } catch (error) {
+    console.error(error)
+    alert('เกิดข้อผิดพลาด')
+  }
 }
 </script>
 
@@ -88,7 +107,6 @@ const order = (productName) => {
   margin-bottom: 30px;
 }
 
-/* 🔹 การ์ดสินค้า */
 .product-card {
   display: flex;
   gap: 30px;
@@ -99,7 +117,6 @@ const order = (productName) => {
   background: #f5f5f5;
 }
 
-/* 🔹 รูป */
 .product-image {
   width: 300px;
   height: 200px;
@@ -108,7 +125,6 @@ const order = (productName) => {
   background: #ddd;
 }
 
-/* 🔹 ข้อมูล */
 .product-info {
   flex: 1;
 }
@@ -124,7 +140,6 @@ const order = (productName) => {
   margin-bottom: 20px;
 }
 
-/* 🔘 ปุ่ม */
 .buy-btn {
   background: black;
   color: white;
@@ -138,7 +153,6 @@ const order = (productName) => {
   opacity: 0.85;
 }
 
-/* 📱 มือถือ */
 @media (max-width: 768px) {
   .product-card {
     flex-direction: column;
