@@ -10,7 +10,7 @@
         </template>
         <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
             <v-app-bar-title>
-                <h3>ระบบเลือกตั้งออนไลน์ (Admin)</h3>
+                <h3>ระบบหน้าจัดการสต็อก (Admin)</h3>
             </v-app-bar-title>
         </v-app-bar>
 
@@ -41,7 +41,7 @@
                 <v-icon class="fas fa-users"></v-icon>
                 </template>
                 <v-list-item-title class="font-weight-bold">
-                    ข้อมูลผู้สมัคร
+                    ข้อมูลคำสั่งซื้อ
                 </v-list-item-title>
             </v-list-item>
             <v-list-item
@@ -49,23 +49,12 @@
                 value=""
                 to="/Admin/student"
             >
+                
                 <template v-slot:prepend>
                 <v-icon class="fas fa-code"></v-icon>
                 </template>
                 <v-list-item-title class="font-weight-bold">
-                    ข้อมูลนักศึกษา
-                </v-list-item-title>
-            </v-list-item>
-            <v-list-item
-                color="primary"
-                value=""
-                to="/Admin/voteresult"
-            >
-                <template v-slot:prepend>
-                <v-icon class="fas fa-code"></v-icon>
-                </template>
-                <v-list-item-title class="font-weight-bold">
-                    ข้อมูลผลการเลือกตั้ง
+                    ----------
                 </v-list-item-title>
             </v-list-item>
             <v-list-item

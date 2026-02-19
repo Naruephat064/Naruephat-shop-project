@@ -27,14 +27,14 @@ const goProducts = () => {
       <!-- รูป -->
       <div class="image-box">
         <v-img
-          src="https://freebiehive.com/wp-content/uploads/2024/09/Flash-Sale-Text-PNG-758x473.jpg"
+          src="https://images.pexels.com/photos/5872174/pexels-photo-5872174.jpeg"
           contain
         />
       </div>
 
       <!-- ข้อความ -->
-      <h1 class="title">ShopDA</h1>
-      <p class="subtitle">แหล่งรวมสินค้าไอที ราคาพิเศษ</p>
+      <h1 class="title">DinosurSHOP</h1>
+      <p class="subtitle">แหล่งรวมสินค้า ราคาพิเศษ</p>
 
       <div class="sale-text">
         SALE <span>50% OFF</span>

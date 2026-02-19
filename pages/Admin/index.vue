@@ -1,5 +1,5 @@
 <template>
-    <h1>Admin ควยไร</h1>
+    <h1>Admin main page</h1>
 </template>
 
 <script setup>

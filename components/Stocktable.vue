@@ -1,115 +1,104 @@
 <template>
-  <div class="admin-orders-page">
-    <h2>รายการสั่งซื้อทั้งหมด</h2>
+    <v-card>
+        <v-card-title class="d-flex pt-8 px-8">
+            <h3 class="font-weight-bold">รายการสั่งซื้อ</h3>
+            <v-spacer></v-spacer>
+            <v-text-field
+                v-model="search"
+                label="ค้นหา"
+                variant="outlined"
+                prepend-inner-icon="mdi-magnify"
+            ></v-text-field>
+        </v-card-title>
 
-    <table class="orders-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>สินค้า</th>
-          <th>ราคา</th>
-          <th>ชื่อผู้ซื้อ</th>
-          <th>วันที่สั่ง</th>
-          <th>จัดการ</th> <!-- ✅ เพิ่ม -->
-        </tr>
-      </thead>
+        <v-divider></v-divider>
 
-      <tbody>
-        <tr v-for="order in orders" :key="order.id">
-          <td>{{ order.id }}</td>
-          <td>{{ order.product_name }}</td>
-          <td>{{ order.price }}</td>
-          <td>{{ order.userFullname }}</td>
-          <td>{{ order.order_date }}</td>
-          <td>
-          <button type="button" @click="deleteOrder(order.id)">
-            ลบ
-          </button>
-
-
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+        <v-data-table
+            v-model:search="search"
+            :headers="headers"
+            :items="orders"
+            hover
+        >
+            <template v-slot:item.actions="{ item }">
+                <v-btn
+                    color="error"
+                    variant="text"
+                    icon
+                    @click="deleteOrder(item.id)"
+                >
+                    <i class="fas fa-trash"></i>
+                </v-btn>
+            </template>
+        </v-data-table>
+    </v-card>
 </template>
 
-
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted } from "vue"
 
-definePageMeta({
-  layout: "admin"
+let search = ref()
+let orders = ref([])
+let headers = ref([
+    {
+        title: 'หมายเลข',
+        value: 'id',
+        align: 'center',
+        sortable: true
+    },
+    {
+        title: 'สินค้า',
+        value: 'product_name',
+        sortable: true
+    },
+    {
+        title: 'ราคา',
+        value: 'price'
+    },
+    {
+        title: 'ชื่อผู้ซื้อ',
+        value: 'userFullname'
+    },
+    {
+        title: 'วันที่สั่ง',
+        value: 'order_date'
+    },
+    {
+        title: 'Action',
+        value: 'actions'
+    }
+])
+
+onMounted(async ()=>{
+    await getOrders()
 })
 
-const orders = ref([])
+async function getOrders() {
+    let response = await $fetch('http://localhost/dino-api/orders.php', {
+        method: 'GET',
+        params: {
+            fn: 'getAll'
+        }
+    })
 
-const fetchOrders = async () => {
-  try {
-    const res = await fetch('http://localhost/dino-api/get_orders.php')
-    orders.value = await res.json()
-  } catch (err) {
-    console.error("โหลดข้อมูลไม่สำเร็จ", err)
-  }
+    if(response.status == true) {
+        orders.value = JSON.parse(JSON.stringify(response.data))
+    }
 }
 
-const deleteOrder = async (id) => {
-  if (!confirm("ต้องการลบหรือไม่?")) return
+async function deleteOrder(id) {
+    if (!confirm("ต้องการลบหรือไม่?")) return
 
-  const res = await fetch('http://localhost/dino-api/delete_order.php', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id })
-  })
+    let response = await $fetch('http://localhost/dino-api/orders.php?fn=delete', {
+        method: 'POST',
+        body: {
+            id: id
+        }
+    })
 
-  const result = await res.json()
-  console.log(result)
-
-  fetchOrders()
+    if(response.status == true) {
+        await getOrders()
+    } else {
+        alert("ลบไม่สำเร็จ")
+    }
 }
-
-const testClick = () => {
-  console.log("ปุ่มทำงานแล้ว")
-}
-
-
-onMounted(fetchOrders)
 </script>
-
-
-<style>
-.admin-orders-page {
-  padding: 24px;
-}
-
-.orders-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 12px;
-}
-
-.orders-table th,
-.orders-table td {
-  border: 1px solid #eee;
-  padding: 10px;
-  text-align: center;
-}
-
-.orders-table th {
-  background: #f5f5f5;
-}
-
-.delete-btn {
-  background: red;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.delete-btn:hover {
-  background: darkred;
-}
-
-</style>
